@@ -1,0 +1,28 @@
+2026/03/15 15:00:21 Starting Clan Budget Worker Service...
+2026/03/15 15:00:21 Connecting to PostgreSQL...
+2026/03/15 15:00:21 PostgreSQL connection established.
+2026/03/15 15:00:21 Connecting to RabbitMQ...
+2026/03/15 15:00:21 RabbitMQ Topology setup complete (with DLQ).
+2026/03/15 15:00:21 Started Cron Scheduler (Next run is 1st of next month)
+2026/03/15 15:00:21 [DEV] Running cron immediately due to TEST_RUN=true
+2026/03/15 15:00:21 RunNow: Querying recurring rules...
+2026/03/15 15:00:21 Started RabbitMQ Consumer with concurrency 5
+2026/03/15 15:00:21 Worker 4 started
+2026/03/15 15:00:21 Worker 1 started
+2026/03/15 15:00:21 Worker 3 started
+2026/03/15 15:00:21 Worker 0 started
+2026/03/15 15:00:21 Worker 2 started
+2026/03/15 15:00:21 RunNow completed: Queued 3 recurring rules.
+2026/03/15 15:00:21 [Worker 1] Processing Rule ID: 66224ba7-b9c9-48f6-9118-c3457b65022c
+2026/03/15 15:00:21 [Worker 3] Processing Rule ID: 47b861b8-1248-4a6c-b2f2-25da4101b6e3
+2026/03/15 15:00:21 [Worker 4] Processing Rule ID: e6595f6e-08df-4629-b884-9e607bf0b1fa
+2026/03/15 15:00:21 [Worker 1] Successfully generated pending transaction for Rule 66224ba7-b9c9-48f6-9118-c3457b65022c
+2026/03/15 15:00:21 [Worker 4] Successfully generated pending transaction for Rule e6595f6e-08df-4629-b884-9e607bf0b1fa
+2026/03/15 15:00:21 [Worker 3] Successfully generated pending transaction for Rule 47b861b8-1248-4a6c-b2f2-25da4101b6e3
+2026/03/15 15:02:04 Worker service is up and running. Received signal: terminated to shutdown
+2026/03/15 15:02:04 Shutting down cleanly...
+2026/03/15 15:02:04 Worker 3 stopped
+2026/03/15 15:02:04 Worker 1 stopped
+2026/03/15 15:02:04 Worker 4 stopped
+2026/03/15 15:02:04 Worker 2 stopped
+2026/03/15 15:02:04 Worker 0 stopped
