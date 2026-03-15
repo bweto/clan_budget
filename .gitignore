@@ -1,0 +1,54 @@
+# OS dependencies
+.DS_Store
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+
+# Environment Variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Node.js
+node_modules/
+npm-debug.log
+yarn-error.log
+yarn-debug.log
+pnpm-debug.log
+
+# Next.js
+.next/
+out/
+build/
+.tsbuildinfo
+
+# Go
+bin/
+tmp/
+*.exe
+*.exe~
+*.dll
+*.so
+*.dylib
+*.test
+*.out
+.air/
+tmp/
+
+# Turborepo
+.turbo/
+
+# Project specific
+db-data/
+postgres_data/
+rabbitmq_data/

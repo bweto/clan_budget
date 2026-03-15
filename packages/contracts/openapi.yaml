@@ -1,0 +1,300 @@
+openapi: 3.0.3
+info:
+  title: Clan Budget API
+  version: 1.0.0
+  description: API for managing family budgets, transactions, and recurring expenses.
+servers:
+  - url: /api/v1
+paths:
+  /transactions:
+    get:
+      summary: List transactions
+      operationId: listTransactions
+      parameters:
+        - name: group_id
+          in: query
+          description: Filter by family group
+          required: false
+          schema:
+            type: string
+            format: uuid
+        - name: cursor
+          in: query
+          description: Cursor for pagination (e.g., encoded date + id)
+          required: false
+          schema:
+            type: string
+        - name: limit
+          in: query
+          description: Number of items to return
+          required: false
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionList'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create a transaction
+      operationId: createTransaction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TransactionCreate'
+      responses:
+        '201':
+          description: Transaction created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transaction'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /groups:
+    get:
+      summary: List family groups
+      operationId: listGroups
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/FamilyGroup'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    post:
+      summary: Create a family group
+      operationId: createGroup
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FamilyGroupCreate'
+      responses:
+        '201':
+          description: Group created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FamilyGroup'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /reports/monthly:
+    get:
+      summary: Get monthly summary report
+      operationId: getMonthlyReport
+      parameters:
+        - name: year
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: month
+          in: query
+          required: true
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 12
+        - name: group_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Summary report
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MonthlyReport'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  schemas:
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        details:
+          type: array
+          items:
+            type: string
+            
+    Transaction:
+      type: object
+      required:
+        - id
+        - user_id
+        - type
+        - amount
+        - currency
+        - date
+      properties:
+        id:
+          type: string
+          format: uuid
+        user_id:
+          type: string
+          format: uuid
+        group_id:
+          type: string
+          format: uuid
+          nullable: true
+        recurring_rule_id:
+          type: string
+          format: uuid
+          nullable: true
+        type:
+          type: string
+          enum: [income, expense]
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+        description:
+          type: string
+          nullable: true
+        date:
+          type: string
+          format: date
+        created_at:
+          type: string
+          format: date-time
+          
+    TransactionCreate:
+      type: object
+      required:
+        - type
+        - amount
+        - currency
+        - date
+      properties:
+        group_id:
+          type: string
+          format: uuid
+          nullable: true
+        type:
+          type: string
+          enum: [income, expense]
+        amount:
+          type: number
+          format: float
+        currency:
+          type: string
+          default: USD
+        description:
+          type: string
+        date:
+          type: string
+          format: date
+          
+    TransactionList:
+      type: object
+      required:
+        - data
+        - next_cursor
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Transaction'
+        next_cursor:
+          type: string
+          nullable: true
+          description: Cursor for the next page of results. Null if no more pages.
+          
+    FamilyGroup:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+          
+    FamilyGroupCreate:
+      type: object
+      required:
+        - name
+      properties:
+        name:
+          type: string
+          
+    MonthlyReport:
+      type: object
+      required:
+        - total_income
+        - total_expense
+        - balance
+      properties:
+        total_income:
+          type: number
+          format: float
+        total_expense:
+          type: number
+          format: float
+        balance:
+          type: number
+          format: float
+        categories:
+          type: object
+          additionalProperties:
+            type: number
+            format: float
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters or body
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
